@@ -1,0 +1,83 @@
+Slip-4
+Q1-
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/stat.h>
+
+int main(int argc, char *argv[]) {
+    struct stat fileStat;
+    int i;
+
+    if (argc < 2) {
+        printf("Usage: %s <file1> <file2> ...\n", argv[0]);
+        exit(1);
+    }
+
+    for (i = 1; i < argc; i++) {
+        if (stat(argv[i], &fileStat) == 0) {
+            printf("File '%s' is PRESENT in current directory.\n", argv[i]);
+        } else {
+            printf("File '%s' is NOT PRESENT in current directory.\n", argv[i]);
+        }
+    }
+
+    return 0;
+}
+Q2-
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+
+void sighupHandler() {
+    printf("Child: I have received SIGHUP signal.\n");
+}
+
+void sigintHandler() {
+    printf("Child: I have received SIGINT signal.\n");
+}
+
+void sigquitHandler() {
+    printf("Child: My Papa has Killed me!!!\n");
+    exit(0);
+}
+
+int main() {
+    int pid = fork();
+
+    if (pid < 0) {
+        printf("Fork Failed!\n");
+        exit(1);
+    }
+
+    if (pid == 0) {  
+        // Child process
+        signal(SIGHUP, sighupHandler);
+        signal(SIGINT, sigintHandler);
+        signal(SIGQUIT, sigquitHandler);
+
+        // Infinite loop to keep child alive and waiting for signals
+        while (1)
+            ; 
+    } 
+    else {  
+        // Parent process
+        sleep(3);
+        kill(pid, SIGHUP);
+
+        sleep(3);
+        kill(pid, SIGINT);
+
+        sleep(3);
+        kill(pid, SIGHUP);
+
+        sleep(3);
+        kill(pid, SIGINT);
+
+        sleep(3);
+        kill(pid, SIGQUIT);
+    }
+
+    return 0;
+}
