@@ -1,0 +1,59 @@
+Slip 23
+Q1-
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+
+int main() {
+    char filename[100];
+    struct stat filestat;
+
+    printf("Enter file name: ");
+    scanf("%s", filename);
+
+    if (stat(filename, &filestat) == 0) {
+        printf("File '%s' is PRESENT in current directory.\n", filename);
+    } else {
+        printf("File '%s' is NOT PRESENT in current directory.\n", filename);
+    }
+
+    return 0;
+}
+Q2-
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+
+int main() {
+    char filename[100];
+    struct stat filestat;
+
+    printf("Enter file name: ");
+    scanf("%s", filename);
+
+    if (stat(filename, &filestat) != 0) {
+        printf("Error: File not found!\n");
+        exit(1);
+    }
+
+    printf("File Type of '%s' : ", filename);
+
+    if (S_ISREG(filestat.st_mode))
+        printf("Regular File\n");
+    else if (S_ISDIR(filestat.st_mode))
+        printf("Directory\n");
+    else if (S_ISCHR(filestat.st_mode))
+        printf("Character Device\n");
+    else if (S_ISBLK(filestat.st_mode))
+        printf("Block Device\n");
+    else if (S_ISFIFO(filestat.st_mode))
+        printf("FIFO / Pipe\n");
+    else if (S_ISLNK(filestat.st_mode))
+        printf("Symbolic Link\n");
+    else if (S_ISSOCK(filestat.st_mode))
+        printf("Socket\n");
+    else
+        printf("Unknown File Type\n");
+
+    return 0;
+}
