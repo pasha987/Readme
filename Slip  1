@@ -1,0 +1,71 @@
+Q1-
+# Hill Climbing algorithm to maximize f(x) = -x^2 + 4x
+
+def f(x):
+    return -(x**2) + 4*x
+
+def hill_climbing(initial_x, step_size=0.1, max_iterations=1000):
+    current_x = initial_x
+    current_value = f(current_x)
+
+    for _ in range(max_iterations):
+        # Neighboring solutions
+        left_x = current_x - step_size
+        right_x = current_x + step_size
+
+        left_value = f(left_x)
+        right_value = f(right_x)
+
+        # Choose the best neighbor
+        if left_value > current_value:
+            current_x, current_value = left_x, left_value
+        elif right_value > current_value:
+            current_x, current_value = right_x, right_value
+        else:
+            break  # No improvement → reached optimum
+
+    return current_x, current_value
+
+# Run the hill climbing
+best_x, best_value = hill_climbing(initial_x=0)
+
+print("Maximum at x =", best_x)
+print("Maximum value f(x) =", best_value)
+
+Q2-
+# DFS algorithm using stack
+
+graph = {
+    1: [2, 3],
+    2: [1, 4, 5],
+    3: [1, 6, 7],
+    4: [2, 8],
+    5: [2, 8],
+    6: [3, 8],
+    7: [3, 8],
+    8: [4, 5, 6, 7]
+}
+
+def dfs(start, goal):
+    stack = [start]
+    visited = set()
+
+    while stack:
+        node = stack.pop()
+        if node == goal:
+            print("Goal found:", node)
+            return
+        
+        if node not in visited:
+            print("Visited:", node)
+            visited.add(node)
+
+            # Add neighbors in reverse to maintain correct DFS order
+            for neighbor in reversed(graph[node]):
+                if neighbor not in visited:
+                    stack.append(neighbor)
+
+    print("Goal not found")
+
+# Run DFS
+dfs(1, 8)
