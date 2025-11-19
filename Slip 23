@@ -1,0 +1,47 @@
+Q1-
+def tower_of_hanoi(n, source, auxiliary, destination):
+    if n == 1:
+        print("Move disk 1 from", source, "to", destination)
+        return
+    
+    tower_of_hanoi(n-1, source, destination, auxiliary)
+    print("Move disk", n, "from", source, "to", destination)
+    tower_of_hanoi(n-1, auxiliary, source, destination)
+
+# Number of disks
+n = 3
+
+print("Tower of Hanoi solution for", n, "disks:")
+tower_of_hanoi(n, "A", "B", "C")
+
+Q2-
+import itertools
+
+def solve_cryptarithm():
+    letters = ('S', 'E', 'N', 'D', 'M', 'O', 'R', 'Y')
+    
+    for perm in itertools.permutations(range(10), len(letters)):
+        mapping = dict(zip(letters, perm))
+        
+        # Leading letters cannot be zero
+        if mapping['S'] == 0 or mapping['M'] == 0:
+            continue
+        
+        # Form numbers
+        SEND  = 1000*mapping['S'] + 100*mapping['E'] + 10*mapping['N'] + mapping['D']
+        MORE  = 1000*mapping['M'] + 100*mapping['O'] + 10*mapping['R'] + mapping['E']
+        MONEY = 10000*mapping['M'] + 1000*mapping['O'] + 100*mapping['N'] + 10*mapping['E'] + mapping['Y']
+        
+        # Check equation
+        if SEND + MORE == MONEY:
+            print("Solution Found!")
+            print("SEND :", SEND)
+            print("MORE :", MORE)
+            print("MONEY:", MONEY)
+            print("Mapping:", mapping)
+            return
+
+    print("No solution found.")
+
+# Run program
+solve_cryptarithm()
