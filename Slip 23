@@ -1,0 +1,101 @@
+Q1-
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Tiles & Rotation</title>
+
+    <style>
+        body{
+            text-align:center;
+            background:#f5f5f5;
+            padding:20px;
+        }
+
+        #tile-container{
+            width:400px;
+            height:400px;
+            background-image: url('/mnt/data/e2cb82ef-da7b-4cf6-97e7-beaa7ac8b403.png');
+            background-size: 100px 100px;  /* tile size */
+            margin: 20px auto;
+            border:3px solid black;
+        }
+
+        #rotate-img{
+            width:200px;
+            transition:1s;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h2>Image Display in Tiles</h2>
+    <div id="tile-container"></div>
+
+    <h2>Image Rotation</h2>
+    <img id="rotate-img" src="/mnt/data/e2cb82ef-da7b-4cf6-97e7-beaa7ac8b403.png">
+
+    <br><br>
+
+    <button onclick="rotateClock()">Rotate Clockwise</button>
+    <button onclick="rotateAnti()">Rotate Anti-Clockwise</button>
+
+<script>
+    let angle = 0;
+
+    function rotateClock(){
+        angle += 45;
+        document.getElementById("rotate-img").style.transform =
+            "rotate(" + angle + "deg)";
+    }
+
+    function rotateAnti(){
+        angle -= 45;
+        document.getElementById("rotate-img").style.transform =
+            "rotate(" + angle + "deg)";
+    }
+</script>
+
+</body>
+</html>
+
+Q2-
+// Vehicle Types
+CREATE (v1:VehicleType {name:'Scooter', category:'Two-Wheeler', characteristics:'Lightweight, Easy to ride'});
+CREATE (v2:VehicleType {name:'Motorbike', category:'Two-Wheeler', characteristics:'Powerful, Fast'});
+CREATE (v3:VehicleType {name:'Sedan', category:'Four-Wheeler', characteristics:'Comfortable, Family Car'});
+CREATE (v4:VehicleType {name:'SUV', category:'Four-Wheeler', characteristics:'Spacious, Off-road capability'});
+
+// Customers
+CREATE (c1:Customer {name:'Rohan', city:'Pune'});
+CREATE (c2:Customer {name:'Meera', city:'Mumbai'});
+CREATE (c3:Customer {name:'Arjun', city:'Pune'});
+
+// BOUGHT relationships
+CREATE (c1)-[:BOUGHT]->(v1);
+CREATE (c1)-[:BOUGHT]->(v3);
+CREATE (c2)-[:BOUGHT]->(v2);
+CREATE (c3)-[:BOUGHT]->(v3);
+CREATE (c3)-[:BOUGHT]->(v4);
+
+// RECOMMENDS relationships
+CREATE (c1)-[:RECOMMENDS {rating:5}]->(v3);
+CREATE (c2)-[:RECOMMENDS {rating:4}]->(v2);
+CREATE (c3)-[:RECOMMENDS {rating:5}]->(v4);
+
+Queries-
+MATCH (v:VehicleType)
+WHERE v.category = 'Four-Wheeler'
+RETURN v.name, v.characteristics;
+MATCH (c:Customer)-[:BOUGHT]->(v:VehicleType)
+WHERE v.category = 'Two-Wheeler'
+RETURN c.name;
+MATCH (c:Customer)-[:BOUGHT]->(v:VehicleType)
+WITH c, COUNT(v) AS vehicleCount
+WHERE vehicleCount > 1
+RETURN c.name, vehicleCount;
+MATCH (:Customer)-[r:RECOMMENDS]->(v:VehicleType)
+RETURN v.name, COUNT(r) AS totalRecommendations
+ORDER BY totalRecommendations DESC
+LIMIT 1;
