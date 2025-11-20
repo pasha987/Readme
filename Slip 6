@@ -1,0 +1,136 @@
+Q1-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Insurance Policy Web Page</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        nav a { margin-right: 15px; }
+        table { width: 60%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid black; padding: 8px; }
+    </style>
+</head>
+<body>
+
+    <!-- Logo -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Insurance_icon.png/600px-Insurance_icon.png" width="120">
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Policies</a>
+        <a href="#">Contact</a>
+    </nav>
+
+    <h1>Welcome to Our Insurance Portal</h1>
+    <p>We provide various policies like Term Plan, Komal Jeevan, Money Back, and more.</p>
+
+    <!-- Hyperlink -->
+    <p>Visit LIC website: <a href="https://www.licindia.in">LIC India</a></p>
+
+    <!-- Table -->
+    <h2>Popular Policies</h2>
+    <table>
+        <tr><th>Policy Name</th><th>Type</th><th>Premium</th></tr>
+        <tr><td>Komal Jeevan</td><td>Yearly</td><td>₹8500</td></tr>
+        <tr><td>Jeevan Anand</td><td>Monthly</td><td>₹1200</td></tr>
+    </table>
+
+</body>
+</html>
+
+Q2-
+{
+  "cust_id": 1,
+  "name": "Rohan Patil",
+  "age": 30,
+  "policy_id": 101,
+  "premium_amount": 8500,
+  "premium_type": "Yearly"
+}
+{
+  "cust_id": 2,
+  "name": "Sneha Kulkarni",
+  "age": 27,
+  "policy_id": 102,
+  "premium_amount": 1200,
+  "premium_type": "Monthly"
+}
+{
+  "cust_id": 3,
+  "name": "Anita Deshmukh",
+  "age": 26,
+  "policy_id": 101,
+  "premium_amount": 7800,
+  "premium_type": "Half Yearly"
+}
+{
+  "cust_id": 4,
+  "name": "Akash Jadhav",
+  "age": 35,
+  "policy_id": 103,
+  "premium_amount": 5200,
+  "premium_type": "Monthly"
+}
+{
+  "cust_id": 5,
+  "name": "Meera Joshi",
+  "age": 40,
+  "policy_id": 101,
+  "premium_amount": 9000,
+  "premium_type": "Yearly"
+}
+{
+  "policy_id": 101,
+  "policy_name": "Komal Jeevan",
+  "company_id": 1,
+  "policy_type": "Yearly"
+}
+{
+  "policy_id": 102,
+  "policy_name": "Jeevan Anand",
+  "company_id": 1,
+  "policy_type": "Monthly"
+}
+{
+  "policy_id": 103,
+  "policy_name": "Money Back",
+  "company_id": 2,
+  "policy_type": "Monthly"
+}
+{
+  "policy_id": 104,
+  "policy_name": "Smart Protect",
+  "company_id": 2,
+  "policy_type": "Half Yearly"
+}
+{
+  "policy_id": 105,
+  "policy_name": "Term Plan",
+  "company_id": 1,
+  "policy_type": "Yearly"
+}
+{
+  "company_id": 1,
+  "company_name": "LIC"
+}
+{
+  "company_id": 2,
+  "company_name": "HDFC Life"
+}
+
+db.policies.find({ policy_name: "Komal Jeevan" })
+db.customers.find(
+    { policy_id: 101 }
+)
+db.customers.aggregate([
+    { $group: { _id: null, avgPremium: { $avg: "$premium_amount" } } }
+])
+db.customers.updateMany(
+    { premium_type: "Monthly" },
+    [
+        { $set: { premium_amount: { $multiply: ["$premium_amount", 1.05] } } }
+    ]
+)
+db.customers.countDocuments({ premium_type: "Half Yearly" })
