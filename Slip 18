@@ -1,0 +1,74 @@
+Q1-
+<!DOCTYPE html>
+<html>
+<head>
+    <title>2D Transform Demo</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f3f3f3;
+        }
+
+        img{
+            width: 250px;
+            transition: 1s;
+        }
+
+        img:hover{
+            transform: rotate(20deg) scale(1.2) translate(30px, 20px);
+        }
+    </style>
+</head>
+<body>
+
+    <img src="/mnt/data/8765166d-8685-4ec3-9ac7-e59cb247d124.png" alt="Demo Image">
+
+</body>
+</html>
+
+Q2-
+// Doctors
+CREATE (d1:Doctor {name:'Dr A', specialization:'Orthopedic', area:'Kothrud'});
+CREATE (d2:Doctor {name:'Dr B', specialization:'Pediatric', area:'Seren Medows'});
+CREATE (d3:Doctor {name:'Dr C', specialization:'Cardiology', area:'Hinjewadi'});
+
+// Hospitals
+CREATE (h1:Hospital {name:'City Hospital', location:'Kothrud'});
+CREATE (h2:Hospital {name:'Seren Medows Hospital', location:'Seren Medows'});
+CREATE (h3:Hospital {name:'Sunrise Hospital', location:'Aundh'});
+
+// Persons
+CREATE (p1:Person {name:'Rohan'});
+CREATE (p2:Person {name:'Meera'});
+
+// Relationships
+CREATE (d1)-[:VISITS]->(h1);
+CREATE (d2)-[:VISITS]->(h2);
+CREATE (d2)-[:VISITS]->(h3);
+CREATE (d3)-[:VISITS]->(h3);
+
+// Reviews & Recommendations
+CREATE (p1)-[:REVIEWED {rating:5, comment:'Very good'}]->(d2);
+CREATE (p2)-[:RECOMMENDS]->(d2);
+
+Queries-
+
+MATCH (d:Doctor)
+WHERE d.specialization = 'Orthopedic' AND d.area = 'Kothrud'
+RETURN d.name;
+MATCH (d:Doctor)
+WHERE d.specialization = 'Pediatric'
+RETURN d.name;
+MATCH (p:Person)-[:RECOMMENDS]->(d:Doctor)
+WHERE d.specialization = 'Pediatric'
+  AND d.area = 'Seren Medows'
+RETURN d.name, COUNT(p) AS recommendations
+ORDER BY recommendations DESC 
+LIMIT 1;
+MATCH (d:Doctor)-[:VISITS]->(h:Hospital)
+WITH d, COUNT(h) AS hospitalCount
+WHERE hospitalCount > 2
+RETURN d.name, hospitalCount;
